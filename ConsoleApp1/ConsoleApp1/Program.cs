@@ -1,8 +1,9 @@
-﻿using System;
-using MathsTutor;
+using System;
+using System.Collections.Generic;
 
 namespace MathsTutor
 {
+    public static class MathsTutor { }
     class Program
     {
         private static int expectedAnswer;
@@ -35,9 +36,11 @@ namespace MathsTutor
                         Console.WriteLine("Dealing 3 cards...");
                         int[] values = pack.Deal(3);
                         Console.WriteLine($"[{values[0]}, {values[1]}, {values[2]}]");
-                        break;
 
-                        Console.WriteLine($"{values[0]} {(Operator)values[1]} {values[2]}");
+                        Operator op = (Operator)Enum.Parse(typeof(Operator), values[1].ToString());
+                        Console.WriteLine($"{values[0]} {op.ToString()} {values[2]}");
+
+
 
                         Console.Write("Enter your answer: ");
                         string answerInput = Console.ReadLine();
@@ -46,24 +49,23 @@ namespace MathsTutor
                         bool isNumeric = int.TryParse(answerInput, out answer);
                         if (isNumeric)
                         {
-                            static int Calculate(int a, int b, int c, int answer)
+                            Operator op = (Operator)values[1];
+                            int expectedAnswer = MathsHelper.Calculate(values[0], op, values[2]);
+                            if (answer == expectedAnswer)
                             {
-
-
-                                if (answer == expectedAnswer)
-                                {
-                                    Console.WriteLine("Correct!");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Incorrect.");
-                                }
+                                Console.WriteLine("Correct!");
                             }
+                            else
+                            {
+                                Console.WriteLine("Incorrect.");
+                            }
+
                         }
                         else
                         {
                             Console.WriteLine("Invalid input. Please enter a number.");
                         }
+
 
                         Console.WriteLine();
                         Console.WriteLine("1. Deal again");
@@ -72,13 +74,14 @@ namespace MathsTutor
                         string dealInput = Console.ReadLine();
                         Console.WriteLine();
 
-                        if (dealInput == "1")
-                        {
-                            pack.Shuffle();
-                        }
-                        else if (dealInput == "2")
+                        if (dealInput == "2")
                         {
                             Console.WriteLine("Returning to menu...");
+                        }
+                        else if (dealInput == "1")
+                        {
+                            int[] values = pack.Deal(3);
+                            Console.WriteLine($"[{values[0]}, {values[1]}, {values[2]}]");
                         }
                         else
                         {
@@ -92,9 +95,10 @@ namespace MathsTutor
                     default:
                         Console.WriteLine("Invalid input.");
                         break;
-                }
 
-                Console.WriteLine();
+
+                        Console.WriteLine();
+                }
             }
         }
     }
